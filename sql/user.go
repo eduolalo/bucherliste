@@ -1,4 +1,4 @@
-package db
+package sql
 
 import "gorm.io/gorm"
 
@@ -14,7 +14,7 @@ type User struct {
 	Password string `gorm:"-" validate:"required,max=64"  json:"password"`
 	Hash     []byte `gorm:"type:BINARY(32);not null" json:"-"`
 
-	/*  Relaciones  */
+	/*                                    Relaciones                                    */
 	// Users has many Wishlists
 	WishList []WishList `gorm:"foreignkey:UserID"`
 }

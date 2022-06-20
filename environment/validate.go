@@ -10,8 +10,7 @@ import (
 func Validate() (ok bool) {
 
 	variables := []string{
-		"MSSQL_STRING",
-		"JWT_MAX_EXP",
+		"DB_STRING",
 		"JWT_SECRET",
 		"GO_ENV",
 		"LOG_LEVEL",
