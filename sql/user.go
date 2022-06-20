@@ -1,13 +1,16 @@
 package sql
 
-import "gorm.io/gorm"
+import (
+	"github.com/google/uuid"
+	"gorm.io/gorm"
+)
 
 // User es la estructura para trabajar con los datos de un usuario
 type User struct {
 	gorm.Model
 
 	// Identificador público del usuario
-	ID []byte `gorm:"type:BINARY(16);not null;unique;default:(UUID_TO_BIN(UUID()))"`
+	ID uuid.UUID `gorm:"type:BINARY(16);not null;unique;default:(UUID_TO_BIN(UUID()))"`
 	// Nombre(s) del usuario
 	Username string `gorm:"size:64;not null" validate:"required,max=64" json:"username"`
 	// Password
@@ -16,5 +19,5 @@ type User struct {
 
 	/*                                    Relaciones                                    */
 	// Users has many Wishlists
-	WishList []WishList `gorm:"foreignkey:UserID"`
+	Wishlist []Wishlist `gorm:"foreignkey:UserID"`
 }
