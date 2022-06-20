@@ -14,7 +14,7 @@ func Accepts(app *fiber.App) {
 	app.Use(func(c *fiber.Ctx) error {
 
 		// El content-type sólo se revisa en los métodos que tienen un body
-		if c.Method() != "POST" || c.Method() != "PUT" {
+		if c.Method() != "POST" && c.Method() != "PUT" {
 
 			return c.Next()
 		}

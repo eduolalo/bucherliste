@@ -1,13 +1,16 @@
 package sql
 
-import "gorm.io/gorm"
+import (
+	"github.com/google/uuid"
+	"gorm.io/gorm"
+)
 
 // Book es la estructura para trabajar con los datos de un libro
 type Book struct {
 	gorm.Model
 
 	// Identificador del libro
-	ID []byte `gorm:"type:BINARY(16);not null;unique;default:(UUID_TO_BIN(UUID()))"`
+	ID uuid.UUID `gorm:"type:BINARY(16);not null;unique;default:(UUID_TO_BIN(UUID()))"`
 	// Identificador en google books
 	GID string `gorm:"size:64;not null" validate:"required,max=64" json:"gid"`
 	// Titulo del libro
@@ -19,5 +22,5 @@ type Book struct {
 
 	/*                                    Relaciones                                    */
 	// Book belongs to a wishlist
-	WishListID []byte `gorm:"type:BINARY(16);not null"`
+	WishlistID []byte `gorm:"type:BINARY(16);not null"`
 }

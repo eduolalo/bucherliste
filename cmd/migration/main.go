@@ -16,7 +16,7 @@ func main() {
 
 	err = db.AutoMigrate(
 		&sql.User{},
-		&sql.WishList{},
+		&sql.Wishlist{},
 		&sql.Book{},
 	)
 	if err != nil {

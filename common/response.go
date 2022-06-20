@@ -17,6 +17,17 @@ func (s *Response) Ok(mssg string) {
 	}
 }
 
+// Created Setea los campos a un estado de respuesta afirmativa de creación
+func (s *Response) Created(mssg string) {
+
+	s.StatusCode = "201"
+	s.Message = "created"
+	if mssg != "" {
+
+		s.Message = mssg
+	}
+}
+
 // BadRequest Setea los campos a un estado de respuesta de Error de parte del cliente
 func (s *Response) BadRequest(mssg string) {
 
