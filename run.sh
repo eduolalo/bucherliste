@@ -8,7 +8,7 @@ export JWT_SECRET="b1f6d60c38adcff434ad6ac5584cc89b4e1ec0a22fe82df79c06c843a5dbb
 export API_URL="https://www.googleapis.com/books/v1/volumes?key=AIzaSyAqlSYDVik9vOBuLLhpIK_TNv7bh-VbHrk&"
 export GO_ENV="development"
 export LOG_LEVEL="Info"
-export RDS_NAME="dev"
+export JWT_TTL="3000"
 export DEBUG="true"
 export PORT="3000"
 

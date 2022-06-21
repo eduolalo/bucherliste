@@ -1,7 +1,6 @@
 package sql
 
 import (
-	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -10,15 +9,34 @@ type Wishlist struct {
 	gorm.Model
 
 	// Identificador de la lista
-	ID uuid.UUID `gorm:"type:BINARY(16);not null;unique;default:(UUID_TO_BIN(UUID()))"`
+	ID UID `gorm:"primaryKey;default:(UUID_TO_BIN(UUID()))"`
 	// Nombre de la lista
 	Name string `gorm:"size:64;not null" validate:"required,max=64" json:"name"`
 
 	/*                                    Relaciones                                    */
 	// Wishlists belongs to a User
-	UserID uuid.UUID `gorm:"type:BINARY(16);not null"`
-	User   User
+	UserID UID  `gorm:"not null" json:"-" `
+	User   User `json:"-" validate:"-"`
 
 	// Wishlists has many Books
-	Books []Book `gorm:"foreignkey:WishlistID"`
+	Books []Book `gorm:"foreignkey:WishlistID" validate:"-"`
+}
+
+/**************************************************************************/
+/*                                Métodos                                 */
+/**************************************************************************/
+
+// Unmarshal acomoda los datos del body en la estructura
+func (w *Wishlist) Unmarshal(body []byte) error {
+
+	if err := json.Unmarshal(body, w); err != nil {
+
+		return err
+	}
+	return nil
+}
+
+// Validate corre las validaciones de la estructura
+func (w *Wishlist) Validate() error {
+	return validateStruct(w, "Wishlist.")
 }
