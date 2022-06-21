@@ -14,11 +14,11 @@ import (
 
 // Payload representación del payload del jwt de authorización
 type Payload struct {
-	ISS string `json:"iss" validate:"required,numeric"`
-	Nbf int    `json:"nbf" validate:"required,numeric"`
-	Iat int    `json:"iat" validate:"required,numeric"`
-	Exp int    `json:"exp" validate:"required,numeric"`
-	Ref string `json:"ref" validate:"required,uuid"`
+	ISS string  `json:"iss" validate:"required,hostname"`
+	Nbf float64 `json:"nbf" validate:"required,numeric"`
+	Iat float64 `json:"iat" validate:"required,numeric"`
+	Exp float64 `json:"exp" validate:"required,numeric"`
+	Ref string  `json:"ref" validate:"required,uuid"`
 }
 
 // Unmarshall usa la sección de payload del jwt para integrar la información a la estructura
@@ -93,4 +93,29 @@ func (s *Payload) Validate(t string) error {
 	// en caso de error, se regresará el del método unmarshall
 	sliced := strings.Split(t, ".")
 	return s.Unmarshall(sliced[1])
+}
+
+// JWT Genera un JWT de sesión con la información del payload
+func (s *Payload) JWT() (string, error) {
+
+	var c jwt.Claims
+	// seteamos los claims
+	c.Issuer = "bucherlist.com"
+	c.Set = map[string]interface{}{
+		"ref": s.Ref,
+	}
+	now := time.Now()
+	from := jwt.NewNumericTime(now)
+	c.NotBefore = from
+	c.Issued = from
+	// Le damos 5 minutos de expiración
+	c.Expires = jwt.NewNumericTime(now.Add(time.Minute * time.Duration(jwtTTL)))
+
+	t, err := c.HMACSign(jwt.HS256, secret)
+	if err != nil {
+
+		logger.Error(err, "common.payload.JWT.HMACSign")
+		return "", err
+	}
+	return string(t), nil
 }

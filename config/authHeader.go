@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/kalmecak/bucherliste/common"
+	"github.com/kalmecak/bucherliste/sql"
 	logger "github.com/kalmecak/go-error-logger"
 
 	"github.com/gofiber/fiber/v2"
@@ -17,13 +18,14 @@ func AuthHeader(app *fiber.App) {
 
 		fsctx := c.Context()
 		header := string(fsctx.Request.Header.Peek("Authorization"))
+		isLogged := false
 
 		// Si la cabecera de autorización está vacía, se continua con el flujo ya que no
 		// todos los paths necesitan que el usuario tenga sesión
 		if header == "" {
 
-			c.Context().SetUserValue("payload", common.Payload{})
-			c.Context().SetUserValue("isLogged", false)
+			c.Context().SetUserValue("userID", &header)
+			c.Context().SetUserValue("isLogged", &isLogged)
 			return c.Next()
 		}
 
@@ -60,13 +62,24 @@ func AuthHeader(app *fiber.App) {
 		// se revisa que el payload tenga los datos necesarios
 		if err := payload.IsValid(); err != nil {
 
-			logger.Message("payload malformed", "config.AuthHeader.payload.IsValid")
+			logger.Message(err.Error(), "config.AuthHeader.payload.IsValid")
 			var res common.Response
 			res.Forbridden("payload malformed")
 			return c.Status(fiber.StatusForbidden).JSON(res)
 		}
-		c.Context().SetUserValue("payload", &payload)
-		c.Context().SetUserValue("isLogged", true)
+
+		// Obtención del id del usuario como UUID
+		uid, err := sql.UIDFromString(payload.Ref)
+		if err != nil {
+
+			logger.Error(err, "config.AuthHeader.sql.UIDFromString")
+			var res common.Response
+			res.InternalError("error parsing user id", "")
+			return c.Status(fiber.StatusInternalServerError).JSON(res)
+		}
+		isLogged = true
+		c.Context().SetUserValue("userID", &uid)
+		c.Context().SetUserValue("isLogged", &isLogged)
 		return c.Next()
 	})
 }

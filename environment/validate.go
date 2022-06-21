@@ -10,10 +10,11 @@ import (
 func Validate() (ok bool) {
 
 	variables := []string{
-		"DB_STRING",
 		"JWT_SECRET",
-		"GO_ENV",
 		"LOG_LEVEL",
+		"DB_STRING",
+		"JWT_TTL",
+		"GO_ENV",
 		"DEBUG",
 	}
 	counter := 0
