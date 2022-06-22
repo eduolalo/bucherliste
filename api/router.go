@@ -18,6 +18,7 @@ func Router(app *fiber.App) {
 	app.Post("/signup", validate.UserBody, user.SignUp)
 	// Sesión de usuario
 	app.Post("/login", validate.UserBody, user.LogIn)
+
 	/**************************************************************************/
 	/*                                Wishlists                               */
 	/**************************************************************************/
@@ -28,7 +29,8 @@ func Router(app *fiber.App) {
 	// Obtener contenido de wishlist
 	app.Get("/wishlist/:id", validate.IsLogged, validate.IDParam, wishlist.Wishlist)
 	// Actualizar wishlist
-	app.Put("/wishlist/:id", validate.IsLogged, validate.IDParam, wishlist.Put)
+	app.Put("/wishlist/:id", validate.IsLogged,
+		validate.IDParam, validate.ValidateWishlistBody, wishlist.Put)
 	// Eliminar wishlist
 	app.Delete("/wishlist/:id", validate.IsLogged, validate.IDParam, wishlist.Delete)
 
@@ -36,5 +38,5 @@ func Router(app *fiber.App) {
 	/*                                 Libros                                 */
 	/**************************************************************************/
 	// Búsqueda de libros
-	app.Get("/books", books.Get)
+	app.Get("/books", validate.IsLogged, books.Get)
 }

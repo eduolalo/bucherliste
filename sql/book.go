@@ -11,7 +11,7 @@ type Book struct {
 	// Identificador del libro
 	ID UID `gorm:"primaryKey;default:(UUID_TO_BIN(UUID()))"`
 	// Identificador en google books
-	GID string `gorm:"size:64;not null" validate:"required,max=64" json:"gid"`
+	GID string `gorm:"size:64;UNIQUE" validate:"required,max=64" json:"gid"`
 	// Titulo del libro
 	Title string `gorm:"size:64;not null" validate:"required,max=128" json:"title"`
 	// Autor del libro
@@ -20,6 +20,6 @@ type Book struct {
 	Publisher string `gorm:"size:128;not null" validate:"required,max=128" json:"publisher"`
 
 	/*                                    Relaciones                                    */
-	// Book belongs to a wishlist
+	// Book pertenece a una wishlist
 	WishlistID UID `json:"-"`
 }

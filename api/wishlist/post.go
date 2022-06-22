@@ -11,20 +11,11 @@ import (
 func Post(c *fiber.Ctx) error {
 
 	// extraemos la wl y el usuario de la sesion
-	id := c.Context().UserValue("userID").(*string)
+	id := c.Context().UserValue("userID").(*sql.UID)
 	wl := c.Context().UserValue("wl").(*sql.Wishlist)
 
-	// Parseamos el id del usuario al tipo UID
-	uid, err := sql.UIDFromString(*id)
-	if err != nil {
-
-		logger.Error(err, "api.wishlist.Post.wl.UserID.Scan")
-		var res common.Response
-		res.InternalError("error parsing userID", "")
-		return c.Status(fiber.StatusInternalServerError).JSON(&res)
-	}
 	// construimos la wishlist
-	wl.UserID = uid
+	wl.UserID = *id
 	// Conectamos con la BD
 	db, err := sql.GormDB()
 	if err != nil {

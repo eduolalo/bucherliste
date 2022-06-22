@@ -20,7 +20,7 @@ type Wishlist struct {
 	User   User `json:"-" validate:"-"`
 
 	// Wishlists has many Books
-	Books []Book `gorm:"foreignkey:WishlistID" validate:"-"`
+	Books []Book `json:"-" validate:"-"`
 }
 
 /**************************************************************************/

@@ -78,5 +78,5 @@ func LogIn(c *fiber.Ctx) error {
 // logged Estructura de la respuesta de login
 type logged struct {
 	common.Response
-	Token string `json:"token"`
+	Token string `json:"access_token"`
 }
