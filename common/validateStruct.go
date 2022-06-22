@@ -1,4 +1,4 @@
-package sql
+package common
 
 import (
 	"errors"
@@ -7,8 +7,8 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-// validateStruct corre validaciones de las estructuras usando sus tags
-func validateStruct(s interface{}, name string) error {
+// ValidateStruct corre validaciones de las estructuras usando sus tags
+func ValidateStruct(s interface{}, name string) error {
 
 	validate := validator.New()
 	err := validate.Struct(s)

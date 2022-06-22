@@ -13,7 +13,7 @@ type Book struct {
 	// Identificador en google books
 	GID string `gorm:"size:64;not null" validate:"required,max=64" json:"gid"`
 	// Titulo del libro
-	Title string `gorm:"size:64;not null" validate:"required,max=64" json:"name"`
+	Title string `gorm:"size:64;not null" validate:"required,max=128" json:"title"`
 	// Autor del libro
 	Authors string `gorm:"size:256;not null" validate:"required,max=256" json:"authors"`
 	// Publicador del libro
