@@ -49,7 +49,9 @@ func Wishlist(c *fiber.Ctx) error {
 	}
 
 	// Buscamos los libros de la wishlist
-	if err := db.Model(wl).Association("Books").Error; err != nil {
+	books := []sql.Book{}
+	err = db.Model(wl).Association("Books").Find(&books)
+	if err != nil {
 
 		logger.Error(err, "api.wishlist.Books.db.Association")
 		res := booksRes{}
@@ -59,7 +61,7 @@ func Wishlist(c *fiber.Ctx) error {
 	}
 
 	res := booksRes{
-		Wishlist: wl,
+		Books: books,
 	}
 	res.Ok("")
 	return c.Status(fiber.StatusOK).JSON(&res)
@@ -67,5 +69,5 @@ func Wishlist(c *fiber.Ctx) error {
 
 type booksRes struct {
 	common.Response
-	Wishlist *sql.Wishlist `json:"wishlist"`
+	Books []sql.Book `json:"books"`
 }
