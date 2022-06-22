@@ -1,6 +1,7 @@
 package sql
 
 import (
+	"github.com/kalmecak/bucherliste/common"
 	"gorm.io/gorm"
 )
 
@@ -29,7 +30,7 @@ type Wishlist struct {
 // Unmarshal acomoda los datos del body en la estructura
 func (w *Wishlist) Unmarshal(body []byte) error {
 
-	if err := json.Unmarshal(body, w); err != nil {
+	if err := common.JSON.Unmarshal(body, w); err != nil {
 
 		return err
 	}
@@ -38,5 +39,5 @@ func (w *Wishlist) Unmarshal(body []byte) error {
 
 // Validate corre las validaciones de la estructura
 func (w *Wishlist) Validate() error {
-	return validateStruct(w, "Wishlist.")
+	return common.ValidateStruct(w, "Wishlist.")
 }

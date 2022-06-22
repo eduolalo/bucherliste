@@ -3,6 +3,7 @@ package sql
 import (
 	"crypto/sha256"
 
+	"github.com/kalmecak/bucherliste/common"
 	"gorm.io/gorm"
 )
 
@@ -30,7 +31,7 @@ type User struct {
 // Unmarshal acomoda los datos del body en la estructura
 func (u *User) Unmarshal(body []byte) error {
 
-	if err := json.Unmarshal(body, u); err != nil {
+	if err := common.JSON.Unmarshal(body, u); err != nil {
 
 		return err
 	}
@@ -39,7 +40,7 @@ func (u *User) Unmarshal(body []byte) error {
 
 // Validate corre las validaciones de la estructura
 func (u *User) Validate() error {
-	return validateStruct(u, "User.")
+	return common.ValidateStruct(u, "User.")
 }
 
 // BuilHash construye el hash del password para almacenar en la base de datos

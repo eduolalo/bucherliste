@@ -2,6 +2,7 @@ package api
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/kalmecak/bucherliste/api/books"
 	"github.com/kalmecak/bucherliste/api/user"
 	"github.com/kalmecak/bucherliste/api/validate"
 	"github.com/kalmecak/bucherliste/api/wishlist"
@@ -35,5 +36,5 @@ func Router(app *fiber.App) {
 	/*                                 Libros                                 */
 	/**************************************************************************/
 	// Búsqueda de libros
-	app.Get("/books", wishlist.Wishlist)
+	app.Get("/books", books.Get)
 }
