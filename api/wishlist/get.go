@@ -26,7 +26,7 @@ func Get(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(&res)
 	}
 	var wls []sql.Wishlist
-	err = db.Model(&user).Association("Wishlists").Find(&wls)
+	err = db.Model(&user).Order("created_at DESC").Association("Wishlists").Find(&wls)
 	if err != nil {
 
 		res := listRes{

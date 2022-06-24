@@ -4,6 +4,7 @@ import (
 	"os"
 
 	"github.com/kalmecak/bucherliste/api"
+	"github.com/kalmecak/bucherliste/cmd/migration"
 	"github.com/kalmecak/bucherliste/config"
 	"github.com/kalmecak/bucherliste/environment"
 
@@ -34,10 +35,10 @@ func main() {
 	/*                        Ejecución del migrate                           */
 	/**************************************************************************/
 
-	// if err := migration.Start(); err != nil {
+	if err := migration.Start(); err != nil {
 
-	// 	log.Panic(err)
-	// }
+		log.Panic(err)
+	}
 
 	/**************************************************************************/
 	/*                  Creamos la instancia del servidor                     */
