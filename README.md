@@ -25,7 +25,7 @@ Claro, para ejecutarlo debes tener instalado como mínimo:
 
 Lolcat es para sistemas Unix/Linux, pero en Windows creo que puedes intalar shells de Linux y ejecutar comandos allí si no pues ni modo 🤷🏽‍♂️.
 
-Para el jugar con el API puedes usar [Postman](https://www.postman.com/downloads/), en él importas la descripción del API y te generará las coleciones necesarias, también puedes descargarte la [colección de peticiones](https://www.getpostman.com/collections/612f64002e25dc9b64a9).
+Para el jugar con el API puedes usar [Postman](https://www.postman.com/downloads/), en él importas la [descripción del API](https://github.com/kalmecak/bucherliste/blob/main/apidescription.yml) y te generará las coleciones necesarias, también puedes descargarte la [colección de peticiones](https://www.getpostman.com/collections/612f64002e25dc9b64a9).
 **No olvides:** crear tu colección de variables de entorno en postman, sólo necesitarás _host_ (localhost:8080) y _token_ (JWT token).
 
 También puedes abrir el documento en [Swagger Editor](https://editor.swagger.io/) y se te generará la descripción de los servicios.
