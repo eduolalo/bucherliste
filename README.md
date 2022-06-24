@@ -46,6 +46,13 @@ cd bucherliste
 ```bash
 docker-compose build | lolcat &&  docker-compose up | lolcat
 ```
+
+NOTA: Si no tienes lolcat, puedes usar el comando:
+
+```bash
+docker-compose build && docker-compose up
+```
+
 Después de haber ejecutado el último comando, verás las magia surgir en tu terminal:
 
 Puedes empezar a generar peticiones después de ver este mensaje:
