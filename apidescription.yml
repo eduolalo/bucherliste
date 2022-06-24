@@ -1,0 +1,588 @@
+openapi: '3.0.2'
+info:
+  title: Bücherliste API
+  description: Servicio para búsqueda de libros y creación de wishlists
+  version: '1'
+servers:
+  - url: https://localhost:8080
+    description: Servidor local
+paths:
+  /books:
+    get:
+      summary: Búsqueda de libros
+      tags:
+        - "Libros"
+      parameters:
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+            format: "Bearer: <token>"
+        - in: query
+          name: a
+          description: Autor del libro
+          example: Carlos
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: t
+          description: Título del libro
+          example: Vaquero
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: p
+          description: Editorial que publicó el libro
+          example: Diputación
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: key
+          description: Api key de google, en caso de no enviarse, se usará una propia
+          example: AIzaSyAqlSYDVik9vOBuLLhpIK_TNv7bh-VbHrk
+          required: false
+          schema:
+            type: string
+      security:
+        - bearerAuth: [write]
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookList"
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Forbidden"
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /signup:
+    post:
+      summary: Registro de usuario
+      tags:
+        - "Usuarios"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /login:
+    post:
+      summary: Creación de token de autenticación
+      tags:
+        - "Usuarios"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        200:
+          description: El usuario tiene sesión
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserLogged"
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /wishlist:
+    post:
+      summary: Creación de una Wishlist
+      tags:
+        - "Wishlists"
+      parameters:
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+            format: "Bearer: <token>"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateWishlist"
+      security:
+        - bearerAuth: [write]
+      responses:
+        200:
+          description: El usuario tiene sesión
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Created"
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Forbidden"
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /wishlist/{id}:
+    get:
+      summary: Obtener los libros de una Wishlist
+      tags:
+        - "Wishlists"
+      parameters:
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+            format: "Bearer: <token>"
+        - in: path
+          name: id
+          description: Id de la Wishlist
+          required: true
+          example: 080df63a-f36c-11ec-937b-0242ac110002
+          schema:
+            type: string
+      security:
+        - bearerAuth: [write]
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WishlistResponse"
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Forbidden"
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+    put:
+      summary: Edición de una Wishlist
+      tags:
+        - "Wishlists"
+      parameters:
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+            format: "Bearer: <token>"
+        - in: path
+          name: id
+          description: Id de la Wishlist
+          required: true
+          example: 080df63a-f36c-11ec-937b-0242ac110002
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EditWishlist"
+      security:
+        - bearerAuth: [write]
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Ok"
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Forbidden"
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+    delete:
+      summary: Eliminar una Wishlist
+      tags:
+        - "Wishlists"
+      parameters:
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+            format: "Bearer: <token>"
+        - in: path
+          name: id
+          description: Id de la Wishlist
+          required: true
+          example: 080df63a-f36c-11ec-937b-0242ac110002
+          schema:
+            type: string
+      security:
+        - bearerAuth: [write]
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Ok"
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Forbidden"
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /wishlists:
+    get:
+      summary: Obtener todas las Wishlists del usuario
+      tags:
+        - "Wishlists"
+      parameters:
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+            format: "Bearer: <token>"
+      security:
+        - bearerAuth: [write]
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Wishlists"
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Forbidden"
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+security:
+  - bearerAuth: []
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Wishlists:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Mensaje de respuesta
+          example: ok.
+        statusCode:
+          type: string
+          description: Código de la respuesta
+          example: 200
+        wishlists:
+          type: array
+          items:
+            $ref: "#/components/schemas/Wishlist"
+    Wishlist:
+      type: object
+      properties:
+        ID:
+          type: string
+          description: Id de la Wishlist
+          example: 080df63a-f36c-11ec-937b-0242ac110002
+        name:
+          type: string
+          description: Nombre de la Wishlist
+          example: Wishlist 1
+        CreatedAt:
+          type: string
+          description: Fecha de creación de la Wishlist
+          example: 2020-01-01T00:00:00.000Z
+        UpdateddAt:
+          type: string
+          description: Fecha última de edición de la Wishlist
+          example: 2020-01-01T00:00:00.000Z
+        DeletedAt:
+          type: string
+          description: Fecha de eliminación de la Wishlist
+          example: null
+    DBBook:
+      type: object
+      properties:
+        ID:
+          type: string
+          description: Id de la Wishlist
+          example: 080df63a-f36c-11ec-937b-0242ac110002
+        CreatedAt:
+          type: string
+          description: Fecha de creación de la Wishlist
+          example: 2020-01-01T00:00:00.000Z
+        UpdateddAt:
+          type: string
+          description: Fecha última de edición de la Wishlist
+          example: 2020-01-01T00:00:00.000Z
+        DeletedAt:
+          type: string
+          description: Fecha de eliminación de la Wishlist
+          example: null
+        gid:
+          type: string
+          description: Id del libro en google
+          example: cKyzPgAACAAJ
+        title:
+          type: string
+          description: Título del libro
+          example: Vaquero Turcios
+        authors:
+          type: string
+          description: Autores del libro separados por comas
+          example: Carlos Bousoño,Joaquín Vaquero Turcios
+        publisher:
+          type: string
+          description: Editorial que publicó el libro
+          example: Ediciones de la Universidad de Alicante
+    EditWishlist:
+      type: object
+      properties:
+        delete:
+          description: Acción a hacer con los libros, "false" para agregar y "true" para elimnarlos
+          type: string
+          example: "false"
+        books:
+          type: array
+          description: Lista de libros que se desean modificar
+          items:
+            $ref: "#/components/schemas/Book"
+    WishlistResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Mensaje de respuesta
+          example: ok.
+        statusCode:
+          type: string
+          description: Código de la respuesta
+          example: 200
+        books:
+          type: array
+          description: Lista de libros de la Wishlist
+          items:
+            $ref: "#/components/schemas/DBBook"
+    CreateWishlist:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Wishlist de prueba"
+    User:
+      type: object
+      properties:
+        username:
+          type: string
+          maxLength: 64
+          example: "Carlos"
+        password:
+          type: string
+          maxLength: 64
+          example: "123456"
+    Created:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Mensaje de respuesta
+          example: Created
+        statusCode:
+          type: string
+          description: Código de la respuesta
+          example: 201
+    UserLogged:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Mensaje de respuesta
+          example: ok.
+        statusCode:
+          type: string
+          description: Código de la respuesta
+          example: 200
+        access_token:
+          type: string
+          description: JWT de autenticación
+          example: eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTYyNjc4MjYuODEyMTI3OCwiaWF0IjoxNjU2MDg3ODI2LjgxMjEyNzgsImlzcyI6ImJ1Y2hlcmxpc3QuY29tIiwibmJmIjoxNjU2MDg3ODI2LjgxMjEyNzgsInJlZiI6ImRmZTA1ZjMzLWYzNDEtMTFlYy1iZWJkLTAyNDJhYzE0MDAwMiJ9.fBXDNa5AOzodlhOyBUMcjKOwvgY96Zkz-TvnYDUXQYc
+    BookList:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Mensaje de respuesta
+          example: OK
+        statusCode:
+          type: string
+          description: Código de la respuesta
+        books:
+          type: array
+          items:
+            $ref: "#/components/schemas/Book"
+    Book:
+      type: object
+      properties:
+        gid:
+          type: string
+          description: Id del libro en google
+          example: cKyzPgAACAAJ
+        title:
+          type: string
+          description: Título del libro
+          example: Vaquero Turcios
+        authors:
+          type: string
+          description: Autores del libro separados por comas
+          example: Carlos Bousoño,Joaquín Vaquero Turcios
+        publisher:
+          type: string
+          description: Editorial que publicó el libro
+          example: Ediciones de la Universidad de Alicante
+    Ok:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Mensaje de respuesta
+          example: ok.
+        statusCode:
+          type: string
+          description: Código de la respuesta
+          example: 200
+    Forbidden:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Mensaje de respuesta
+          example: Token corrupted
+        statusCode:
+          type: string
+          description: Código de la respuesta
+          example: 403
+    BadRequest:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Mensaje de respuesta
+          example: Authorization header is not Bearer
+        statusCode:
+          type: string
+          description: Código de la respuesta
+          example: 400
+    InternalServerError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Mensaje de respuesta
+          example: error parsing body
+        statusCode:
+          type: string
+          description: Código de la respuesta
+          example: 500
