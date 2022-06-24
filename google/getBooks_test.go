@@ -1,7 +1,6 @@
 package google
 
 import (
-	"log"
 	"testing"
 )
 
@@ -13,11 +12,9 @@ func TestGetBooks(t *testing.T) {
 			Title:     "perdonan",
 			Publisher: "planeta",
 		}
-		s, err := GetBooks(q.GetGoogleQuery())
+		_, err := GetBooks(q.GetGoogleQuery())
 		if err != nil {
 			t.Error(err)
-		} else {
-			log.Printf("búsqueda: %+v", s)
 		}
 	})
 }

@@ -18,8 +18,19 @@ func TestQuery(t *testing.T) {
 
 	t.Run("GetGoogleQuery_None", func(t *testing.T) {
 		q := Query{}
-		if q.GetGoogleQuery() != "q=" {
-			t.Error("El query solo debería contener 'q='")
+		if query := q.GetGoogleQuery(); query != "AIzaSyAqlSYDVik9vOBuLLhpIK_TNv7bh-VbHrk&q=" {
+
+			t.Errorf("El query solo debería contener 'q=', se encontró: %s", query)
+		}
+	})
+
+	t.Run("GetGoogleQuery_Client_Key", func(t *testing.T) {
+		q := Query{
+			Key: "AIzaSyAqlSYDVik9vOBuLLhpIK_TNv7bh-EDuaD",
+		}
+		if query := q.GetGoogleQuery(); query != "AIzaSyAqlSYDVik9vOBuLLhpIK_TNv7bh-EDuaD&q=" {
+
+			t.Errorf("El query solo debería contener 'q=', se encontró: %s", query)
 		}
 	})
 }
