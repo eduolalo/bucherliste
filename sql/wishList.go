@@ -1,7 +1,10 @@
 package sql
 
 import (
+	"log"
+
 	"github.com/kalmecak/bucherliste/common"
+	logger "github.com/kalmecak/go-error-logger"
 	"gorm.io/gorm"
 )
 
@@ -40,4 +43,51 @@ func (w *Wishlist) Unmarshal(body []byte) error {
 // Validate corre las validaciones de la estructura
 func (w *Wishlist) Validate() error {
 	return common.ValidateStruct(w, "Wishlist.")
+}
+
+// Append agrega los libros a la lista de deseos
+func (w *Wishlist) Append(books *[]Book) error {
+
+	// conectamos a la base de datos
+	db, err := GormDB()
+	if err != nil {
+
+		logger.Error(err, "sql.wishlist.Append.db.GormDB")
+		return err
+	}
+	return db.Session(&gorm.Session{FullSaveAssociations: true}).
+		Model(&w).Association("Books").Append(*books)
+}
+
+// Delete recibe un arreglo de books y los elimina de la lista de deseos
+func (w *Wishlist) Delete(books *[]Book) error {
+
+	// conectamos a la base de datos
+	db, err := GormDB()
+	if err != nil {
+
+		return err
+	}
+
+	gids := []string{}
+	for _, book := range *books {
+
+		gids = append(gids, book.GID)
+	}
+
+	tx := db.Where("g_id in ?", gids).
+		Where("wishlist_id = ?", w.ID).Find(books)
+	if err := tx.Error; err != nil {
+
+		return err
+	}
+
+	tx = db.Delete(books)
+    if err := tx.Error; err != nil {
+
+            return err
+    }
+	log.Printf("%+v", books)
+	return nil
+
 }

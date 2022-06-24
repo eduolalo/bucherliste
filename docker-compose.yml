@@ -1,45 +1,44 @@
 version: '3'
 
 services:
-  web:
+  bucherliste_db:
+    build:
+      context: .
+      dockerfile: ./docker/db.dockerfile
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: x2G6vZOswFKvUbh99m87wjTS2RGpT83
+      MYSQL_USER: kamaji
+      MYSQL_PASSWORD: 6a5139bb6dfdaf34cf60ad67bbc
+      MYSQL_DATABASE: bucherliste
+    container_name: golang-docker-db
+    ports:
+      - 33066:3306
+    volumes:
+      - golang-docker-data:/var/lib/mysql
+
+  bucherliste_back:
     build:
       context: .
       dockerfile: ./docker/app.dockerfile
     ports:
       - 8080:8080
     volumes:
-      - .:/golang-docker
+      - .:/bucherliste
     depends_on:
-      - database
+      bucherliste_db:
+        condition: service_started
     container_name: golang-docker-web
     environment:
-      - 'DB_PORT=3306'
-      - 'DB_HOST=database'
-
-  database:
-    image: mysql:5.7.22
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_USER: root
-      MYSQL_PASSWORD: root
-      MYSQL_DATABASE: golang-docker
-    container_name: golang-docker-db
-    ports:
-      - 33066:3306
-    volumes:
-      - golang-docker-data:/var/lib/mysql 
-
-  pma:
-    image: phpmyadmin/phpmyadmin
-    depends_on:
-      - database
-    ports:
-      - 5003:80
-    environment:
-      - 'PMA_HOST=database'
-      - 'PMA_PORT=3306'
-    container_name: golang-docker-pma
-
+      - DB_HOST=bucherliste_db
+      - DB_STRING=kamaji:6a5139bb6dfdaf34cf60ad67bbc@tcp(bucherliste_db:3306)/bucherliste?charset=utf8mb4&parseTime=True&loc=Local
+      - JWT_SECRET="b1f6d60c38adcff434ad6ac5584cc89b4e1ec0a22fe82df79c06c843a5dbb2b5b13c216a041bc8c20d705575ac35a9cf"
+      - API_URL=https://www.googleapis.com/books/v1/volumes?key=
+      -  API_KEY=AIzaSyAqlSYDVik9vOBuLLhpIK_TNv7bh-VbHrk
+      - GO_ENV=development
+      - LOG_LEVEL=Info
+      - JWT_TTL=3000
+      - DEBUG=true
 
 # persisted storage
 volumes:
