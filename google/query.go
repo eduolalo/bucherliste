@@ -51,6 +51,5 @@ func (q *Query) GetGoogleQuery() string {
 			qprm.WriteString(v)
 		}
 	}
-
 	return qprm.String()
 }

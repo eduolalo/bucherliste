@@ -1,8 +1,6 @@
 package wishlist
 
 import (
-	"log"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/kalmecak/bucherliste/common"
 	"github.com/kalmecak/bucherliste/sql"
@@ -17,10 +15,6 @@ func Put(c *fiber.Ctx) error {
 	uid := c.Context().UserValue("userID").(*sql.UID)
 	books := c.Context().UserValue("books").(*[]sql.Book)
 	remove := c.Context().UserValue("del").(*bool)
-	log.Printf("wlid: %+v", wlid)
-	log.Printf("uid: %s", uid.String())
-	log.Printf("books: %+v", books)
-	log.Println("remove: ", *remove)
 
 	// conectamos a la base de datos
 	db, err := sql.GormDB()
@@ -56,29 +50,17 @@ func Put(c *fiber.Ctx) error {
 		return c.JSON(&res)
 	}
 
-	// // Intentamos crear los registros de los libros
-	// tx = db.Create(books)
-	// if err := tx.Error; err != nil {
-
-	// 	logger.Error(err, "api.wishlist.Put.db.Create.Books")
-	// 	var res common.Response
-	// 	res.InternalError("could not update wishlist", "")
-	// 	return c.Status(fiber.StatusInternalServerError).JSON(&res)
-	// }
-
 	// Si la wishlist existe, modificamos el contenido
-	association := db.Session(&gorm.Session{FullSaveAssociations: true}).
-		Model(&wl).Association("Books")
 
 	// Según lo indicado, eliminamos/agregamos los libros de la wishlist
 	if *remove {
 
-		// Eliminamos los libros de la wishlist
-		err = association.Delete(*books)
+		// Ejecutamos el médoto de la wishlist para eliminar la relación de los libros
+		err = wl.Delete(books)
 	} else {
 
-		// Agregamos los libros a la wishlist
-		err = association.Append(*books)
+		// Ejecutamos el médoto de la wishlist para agregar la relación de los libros
+		err = wl.Append(books)
 	}
 	// verificamos el error de la operación
 	if err != nil {

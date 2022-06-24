@@ -50,7 +50,7 @@ func Wishlist(c *fiber.Ctx) error {
 
 	// Buscamos los libros de la wishlist
 	books := []sql.Book{}
-	err = db.Model(wl).Association("Books").Find(&books)
+	err = db.Model(wl).Order("created_at DESC").Association("Books").Find(&books)
 	if err != nil {
 
 		logger.Error(err, "api.wishlist.Books.db.Association")

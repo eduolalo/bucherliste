@@ -42,6 +42,7 @@ func GetBooks(q string) ([]Book, error) {
 	// revisamos la respuesta de Google
 	if res.StatusCode != 200 {
 
+		logger.Message(res.Request.URL.String(), "api.google.GetBooks.http.URL")
 		logger.Message(string(b), "api.google.GetBooks.http.Do")
 		return nil, errors.New("google api error, check your parameters")
 	}

@@ -4,6 +4,7 @@ import (
 	"os"
 
 	"github.com/kalmecak/bucherliste/api"
+	"github.com/kalmecak/bucherliste/cmd/migration"
 	"github.com/kalmecak/bucherliste/config"
 	"github.com/kalmecak/bucherliste/environment"
 
@@ -28,6 +29,15 @@ func main() {
 	if ok := environment.Validate(); !ok {
 
 		log.Panic("Faltan variables de entorno")
+	}
+
+	/**************************************************************************/
+	/*                        Ejecución del migrate                           */
+	/**************************************************************************/
+
+	if err := migration.Start(); err != nil {
+
+		log.Panic(err)
 	}
 
 	/**************************************************************************/
