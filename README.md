@@ -93,7 +93,8 @@ Después ya podrás jugar con los otros paths:
 * Agregar ó quitar libros: [PUT]  http://localhost:8080/wishlist/:id
 * Eliminar wishlists: [DELETE]  http://localhost:8080/wishlist/:id
 
-Se recomienda ese orden, pero cada quién decide cómo usar las cosas 😂
+Se recomienda ese orden, pero igual estamos preparados para la magia del usuario 😂
+
 <img src="https://cdn.verbub.com/images/es-un-sistema-muy-intuitivo-y-simple-cualquiera-puede-usarlo-el-usuario-255299.jpg" width="166"/>
 
 ## Herramientas utilizadas 🔧
