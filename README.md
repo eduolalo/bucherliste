@@ -87,11 +87,19 @@ y luego crear tu sesión:
 Después ya podrás jugar con los otros paths:
 
 * Buscar libros: [GET]  http://localhost:8080/books?a=camilla&t=hielo&p=maeva&key=AIzaSyAqlSYDVik9vOBuLLhpIK_TNv7bh-VbHrk
+    * URL query para Author: "a="
+    * URL query para Title: "t="
+    * URL query para Publisher: "p="
+    * URL query para Key: "key=" (Opcional)
 * Crear wishlist: [POST]  http://localhost:8080/wishlist
 * Lista de wishlists [GET]  http://localhost:8080/wishlists
 * Contenido de una wishlist: [GET]  http://localhost:8080/wishlist/:id
 * Agregar ó quitar libros: [PUT]  http://localhost:8080/wishlist/:id
 * Eliminar wishlists: [DELETE]  http://localhost:8080/wishlist/:id
+
+Nota: No se por qué Google me responde con error cuando las búsquedas contienen espacios, por ejemplo: "t=libro%20vaquero" o "t=libro vaquero", me dice que la búsqueda está mal, sin embargo, si se hace la búsqueda directamente en el navegador/postman con la url que tira el log (cuando la búsqeda tira error) si funciona 🤷🏽‍♂️:
+
+https://www.googleapis.com/books/v1/volumes?key=AIzaSyAqlSYDVik9vOBuLLhpIK_TNv7bh-VbHrk&q=intitle:libro%20vaquero
 
 Se recomienda ese orden, pero igual estamos preparados para la magia del usuario 😂
 
@@ -180,4 +188,5 @@ Es mi paquete para verificar que todas las variables de entorno necesarias en el
 Paquete que tiene la lógica de conexión y solicitud con Google Books API.
 
 **sql**
+
 Paquete que tiene las estructuras de la base de datos y lógica relacionada al manejo de los datos.
